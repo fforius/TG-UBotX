@@ -153,9 +153,11 @@ binaries = {
     "https://raw.githubusercontent.com/yshalsager/megadown/master/megadown":
     "bin/megadown",
     "https://raw.githubusercontent.com/yshalsager/cmrudl.py/master/cmrudl.py":
-    "bin/cmrudl"
+    "bin/cmrudl",
+    "https://raw.githubusercontent.com/adekmaulana/python-scripts/master/shell/megadirect":
+    "bin/megadirect"
 }
-
+ 
 for binary, path in binaries.items():
     downloader = SmartDL(binary, path, progress_bar=False)
     downloader.start()
@@ -235,4 +237,4 @@ LASTMSG = {}
 CMD_HELP = {}
 ISAFK = False
 AFKREASON = None
-VERSION = "6.0.7"
+VERSION = "6.1.0"
