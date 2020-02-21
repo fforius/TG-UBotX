@@ -1,3 +1,8 @@
+# Copyright (C) 2019 The Raphielscape Company LLC.
+#
+# Licensed under the Raphielscape Public License, Version 1.c (the "License");
+# you may not use this file except in compliance with the License.
+#
 """ Userbot module which contains afk-related commands """
 
 from random import choice, randint
@@ -5,15 +10,9 @@ from asyncio import sleep
 
 from telethon.events import StopPropagation
 
-from ..help import add_help_item
-from userbot import AFKREASON, COUNT_MSG, ISAFK, BOTLOG, BOTLOG_CHATID, USERS, PM_AUTO_BAN
+from userbot import (AFKREASON, COUNT_MSG, CMD_HELP, ISAFK, BOTLOG,
+                     BOTLOG_CHATID, USERS, PM_AUTO_BAN)
 from userbot.events import register
-
-try:
-    from userbot.modules.sql_helper.globals import gvarstatus, addgvar, delgvar
-    afk_db = True
-except AttributeError:
-    afk_db = False
 
 # ========================= CONSTANTS ============================
 AFKSTR = [
@@ -44,35 +43,27 @@ AFKSTR = [
 # =================================================================
 
 
-@register(incoming=True, disable_errors=True)
+@register(incoming=True, disable_edited=True)
 async def mention_afk(mention):
     """ This function takes care of notifying the people who mention you that you are AFK."""
     global COUNT_MSG
     global USERS
     global ISAFK
-    global AFFKREASON
-    ISAFK_SQL = False
-    AFKREASON_SQL = None
-    if afk_db:
-        ISAFK_SQL = gvarstatus("AFK_STATUS")
-        AFKREASON_SQL = gvarstatus("AFK_REASON")
-    EXCUSE = AFKREASON_SQL if afk_db else AFKREASON
     if mention.message.mentioned and not (await mention.get_sender()).bot:
-        if ISAFK or ISAFK_SQL:
+        if ISAFK:
             if mention.sender_id not in USERS:
-                if EXCUSE:
+                if AFKREASON:
                     await mention.reply(f"Maaf pak lagi AFK.\
-                    \nSoalnya gw lagi `{EXCUSE}`")
+                        \nGw lagi `{AFKREASON}`")
                 else:
                     await mention.reply(str(choice(AFKSTR)))
                 USERS.update({mention.sender_id: 1})
                 COUNT_MSG = COUNT_MSG + 1
             elif mention.sender_id in USERS:
                 if USERS[mention.sender_id] % randint(2, 4) == 0:
-                    if EXCUSE:
-                        await mention.reply(
-                            f"Poco masih AFK.\
-                        \nKarena lagi `{EXCUSE}`")
+                    if AFKREASON:
+                        await mention.reply(f"I'm still AFK.\
+                            \nSoalnya gw lagi `{AFKREASON}`")
                     else:
                         await mention.reply(str(choice(AFKSTR)))
                     USERS[mention.sender_id] = USERS[mention.sender_id] + 1
@@ -86,15 +77,8 @@ async def mention_afk(mention):
 async def afk_on_pm(sender):
     """ Function which informs people that you are AFK in PM """
     global ISAFK
-    global AFFKREASON
-    ISAFK_SQL = False
-    AFKREASON_SQL = None
-    if afk_db:
-        ISAFK_SQL = gvarstatus("AFK_STATUS")
-        AFKREASON_SQL = gvarstatus("AFK_REASON")
     global USERS
     global COUNT_MSG
-    EXCUSE = AFKREASON_SQL if afk_db else AFKREASON
     if sender.is_private and sender.sender_id != 777000 and not (
             await sender.get_sender()).bot:
         if PM_AUTO_BAN:
@@ -105,21 +89,20 @@ async def afk_on_pm(sender):
                 apprv = True
         else:
             apprv = True
-        if apprv and (ISAFK or ISAFK_SQL):
+        if apprv and ISAFK:
             if sender.sender_id not in USERS:
-                if EXCUSE:
+                if AFKREASON:
                     await sender.reply(f"Maaf pak lagi AFK.\
-                    \nKarena lagi `{EXCUSE}`")
+                    \nKarena lagi `{AFKREASON}`")
                 else:
                     await sender.reply(str(choice(AFKSTR)))
                 USERS.update({sender.sender_id: 1})
                 COUNT_MSG = COUNT_MSG + 1
             elif apprv and sender.sender_id in USERS:
                 if USERS[sender.sender_id] % randint(2, 4) == 0:
-                    if EXCUSE:
-                        await sender.reply(
-                            f"Poco masih AFK.\
-                        \nDia lagi `{EXCUSE}`")
+                    if AFKREASON:
+                        await sender.reply(f"Poco masih AFK.\
+                        \nDia lagi `{AFKREASON}`")
                     else:
                         await sender.reply(str(choice(AFKSTR)))
                     USERS[sender.sender_id] = USERS[sender.sender_id] + 1
@@ -129,30 +112,21 @@ async def afk_on_pm(sender):
                     COUNT_MSG = COUNT_MSG + 1
 
 
-@register(outgoing=True, pattern="^\.afk(?: |$)(.*)", disable_errors=True)
+@register(outgoing=True, pattern="^.afk(?: |$)(.*)", disable_errors=True)
 async def set_afk(afk_e):
     """ For .afk command, allows you to inform people that you are afk when they message you """
     message = afk_e.text
     string = afk_e.pattern_match.group(1)
     global ISAFK
-    global AFFKREASON
-    ISAFK_SQL = False
-    AFKREASON_SQL = None
-    if afk_db:
-        ISAFK_SQL = gvarstatus("AFK_STATUS")
-        AFKREASON_SQL = gvarstatus("AFK_REASON")
+    global AFKREASON
     if string:
-        if afk_db:
-            addgvar("AFK_REASON", string)
         AFKREASON = string
-        await afk_e.edit(f"AFK doloe\
+        await afk_e.edit(f"AFK Doloe\
         \nMau `{string}`")
     else:
-        await afk_e.edit("AFK doloe")
+        await afk_e.edit("AFK Doloe")
     if BOTLOG:
-        await afk_e.client.send_message(BOTLOG_CHATID, "#AFK\nGw AFK!")
-    if afk_db:
-        addgvar("AFK_STATUS", True)
+        await afk_e.client.send_message(BOTLOG_CHATID, "#AFK\nLu AFK!")
     ISAFK = True
     raise StopPropagation
 
@@ -160,25 +134,18 @@ async def set_afk(afk_e):
 @register(outgoing=True)
 async def type_afk_is_not_true(notafk):
     """ This sets your status as not afk automatically when you write something while being afk """
+    global ISAFK
     global COUNT_MSG
     global USERS
-    global ISAFK
-    global AFFKREASON
-    AFKREASON_SQL = None
-    ISAFK_SQL = False
-    if afk_db:
-        ISAFK_SQL = gvarstatus("AFK_STATUS")
-        AFKREASON_SQL = gvarstatus("AFK_REASON")
-    if ISAFK or ISAFK_SQL:
-        if afk_db:
-            delgvar("AFK_STATUS")
-            delgvar("AFK_REASON")
+    global AFKREASON
+    if ISAFK:
         ISAFK = False
-        AFKREASON = None
+        await notafk.respond("Gw balik.")
+        await sleep(2)
         if BOTLOG:
             await notafk.client.send_message(
                 BOTLOG_CHATID,
-                "Lu ada " + str(COUNT_MSG) + " pesan dari " +
+                "Lu ada " + str(COUNT_MSG) + " Pesan dari " +
                 str(len(USERS)) + " pas lu AFK",
             )
             for i in USERS:
@@ -187,19 +154,17 @@ async def type_afk_is_not_true(notafk):
                 await notafk.client.send_message(
                     BOTLOG_CHATID,
                     "[" + name0 + "](tg://user?id=" + str(i) + ")" +
-                    " ngirim lu" + "`" + str(USERS[i]) + " pesan`",
+                    " ngirim lu " + "`" + str(USERS[i]) + " pesan`",
                 )
         COUNT_MSG = 0
         USERS = {}
+        AFKREASON = None
 
 
-add_help_item(
-    "afk",
-    "Me",
-    "Sets you as afk",
-    """
-    `.afk` [Optional Reason]\
-    **Usage:** Sets you as afk.\nReplies to anyone who tags/PM's \
-    you telling them that you are AFK(reason).\n\nSwitches off AFK when you type back anything, anywhere.
-    """
-)
+CMD_HELP.update({
+    "afk":
+    ".afk [Optional Reason]\
+\nUsage: Sets you as afk.\nReplies to anyone who tags/PM's \
+you telling them that you are AFK(reason).\n\nSwitches off AFK when you type back anything, anywhere.\
+"
+})
