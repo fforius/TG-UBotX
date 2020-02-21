@@ -16,29 +16,29 @@ from userbot.events import register
 
 # ========================= CONSTANTS ============================
 AFKSTR = [
-    "Lagi sibuk pak. chat aja dulu nanti gw bales!",
-    "Lagi ga megang HP. klo ada perlu, chat aja setelah bunyi beep:\n`beeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeep`!",
-    "Ciee kangen, nanti juga balik.",
-    "Tunggu bentar klo ngga...,\nya lama hhe.",
-    "Poco lagi ga ada, ga tau dimana.",
+    "I'm busy right now. Please talk in a bag and when I come back you can just give me the bag!",
+    "I'm away right now. If you need anything, leave a message after the beep:\n`beeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeep`!",
+    "You missed me, next time aim better.",
+    "I'll be back in a few minutes and if I'm not...,\nwait longer.",
+    "I'm not here right now, so I'm probably somewhere else.",
     "Roses are red,\nViolets are blue,\nLeave me a message,\nAnd I'll get back to you.",
-    "Salah satu hal terbaik dalam hidup adalah…\nMenunggu aku kembali hhe.",
-    "Bentar pak,\nKlo lama,\nYa bukan bentar hheh.",
-    "Klo blm tau,\nPoco lg ga ada.",
-    "Hello, ini chat AFK, ga bakal ku cuekin koq",
-    "Aku sedang mengarungi 7 Lautan 7 Negara,\n7 Samudra and 7 Benua,\n7 Gunung and 7 Bukit,\n7 Daratan and 7 Tanjakan,\n7 Jurang and 7 Danau,\n7 Mata Air and 7 Padang Rumput,\n7 Kota and 7 Daerah,\n7 RW and 7 Rumah...\n\nPokoknya jauh!",
-    "Lagi gak megang HP, teriakin aja layar HP pak, kali gw denger wkwkwk.",
-    "gw pergi ke arah\n---->",
-    "gw pergi ke arah\n<----",
-    "Silahkan tinggalkan pesan.",
-    "Poco lg AFK,\nChat aja terus gapapah.",
-    "Klo ga AFK,\npasti gw bales.\n\nTp gw lagi AFK,\nChat aja dulu...",
-    "Lagi AFK!\nGa tau sampe kapan\nPaling bentar lagi",
-    "Saya lagi afk coba kirim nama, nomer, sama alamat nanti saya stalk haha.",
-    "Maaf, lagi AFK.\nChat aja dulu.\nnanti gw balik.",
-    "Cieee yg penasaran text selanjutnya wkwk",
-    "Hidup itu hanya sementara, banyak yang bisa dilakukan...\nMakanya aku lagi melakukan sesuatu..",
-    "lagi AFK pak...\nklo nggak...\n\nga muncul nih pesan",
+    "Sometimes the best things in life are worth waiting for…\nI'll be right back.",
+    "I'll be right back,\nbut if I'm not right back,\nI'll be back later.",
+    "If you haven't figured it out already,\nI'm not here.",
+    "Hello, welcome to my away message, how may I ignore you today?",
+    "I'm away over 7 seas and 7 countries,\n7 waters and 7 continents,\n7 mountains and 7 hills,\n7 plains and 7 mounds,\n7 pools and 7 lakes,\n7 springs and 7 meadows,\n7 cities and 7 neighborhoods,\n7 blocks and 7 houses...\n\nWhere not even your messages can reach me!",
+    "I'm away from the keyboard at the moment, but if you'll scream loud enough at your screen, I might just hear you.",
+    "I went that way\n---->",
+    "I went this way\n<----",
+    "Please leave a message and make me feel even more important than I already am.",
+    "I am not here so stop writing to me,\nor else you will find yourself with a screen full of your own messages.",
+    "If I were here,\nI'd tell you where I am.\n\nBut I'm not,\nso ask me when I return...",
+    "I am away!\nI don't know when I'll be back!\nHopefully a few minutes from now!",
+    "I'm not available right now so please leave your name, number, and address and I will stalk you later.",
+    "Sorry, I'm not here right now.\nFeel free to talk to my userbot as long as you like.\nI'll get back to you later.",
+    "I bet you were expecting an away message!",
+    "Life is so short, there are so many things to do...\nI'm away doing one of them..",
+    "I am not here right now...\nbut if I was...\n\nwouldn't that be awesome?",
 ]
 # =================================================================
 
@@ -52,18 +52,31 @@ async def mention_afk(mention):
     if mention.message.mentioned and not (await mention.get_sender()).bot:
         if ISAFK:
             if mention.sender_id not in USERS:
+<<<<<<< HEAD
                 if AFKREASON:
                     await mention.reply(f"Maaf pak lagi AFK.\
                         \nGw lagi `{AFKREASON}`")
+=======
+                if EXCUSE:
+                    await mention.reply(f"I'm AFK right now.\
+                    \nReason: `{EXCUSE}`")
+>>>>>>> parent of c3f4312... Update afk.py
                 else:
                     await mention.reply(str(choice(AFKSTR)))
                 USERS.update({mention.sender_id: 1})
                 COUNT_MSG = COUNT_MSG + 1
             elif mention.sender_id in USERS:
                 if USERS[mention.sender_id] % randint(2, 4) == 0:
+<<<<<<< HEAD
                     if AFKREASON:
                         await mention.reply(f"I'm still AFK.\
                             \nSoalnya gw lagi `{AFKREASON}`")
+=======
+                    if EXCUSE:
+                        await mention.reply(
+                            f"In case you didn't notice, I'm still AFK.\
+                        \nReason: `{EXCUSE}`")
+>>>>>>> parent of c3f4312... Update afk.py
                     else:
                         await mention.reply(str(choice(AFKSTR)))
                     USERS[mention.sender_id] = USERS[mention.sender_id] + 1
@@ -91,18 +104,31 @@ async def afk_on_pm(sender):
             apprv = True
         if apprv and ISAFK:
             if sender.sender_id not in USERS:
+<<<<<<< HEAD
                 if AFKREASON:
                     await sender.reply(f"Maaf pak lagi AFK.\
                     \nKarena lagi `{AFKREASON}`")
+=======
+                if EXCUSE:
+                    await sender.reply(f"I'm AFK right now.\
+                    \nReason: `{EXCUSE}`")
+>>>>>>> parent of c3f4312... Update afk.py
                 else:
                     await sender.reply(str(choice(AFKSTR)))
                 USERS.update({sender.sender_id: 1})
                 COUNT_MSG = COUNT_MSG + 1
             elif apprv and sender.sender_id in USERS:
                 if USERS[sender.sender_id] % randint(2, 4) == 0:
+<<<<<<< HEAD
                     if AFKREASON:
                         await sender.reply(f"Poco masih AFK.\
                         \nDia lagi `{AFKREASON}`")
+=======
+                    if EXCUSE:
+                        await sender.reply(
+                            f"In case you didn't notice, I'm still AFK.\
+                        \nReason: `{EXCUSE}`")
+>>>>>>> parent of c3f4312... Update afk.py
                     else:
                         await sender.reply(str(choice(AFKSTR)))
                     USERS[sender.sender_id] = USERS[sender.sender_id] + 1
@@ -121,12 +147,23 @@ async def set_afk(afk_e):
     global AFKREASON
     if string:
         AFKREASON = string
+<<<<<<< HEAD
         await afk_e.edit(f"AFK Doloe\
         \nMau `{string}`")
     else:
         await afk_e.edit("AFK Doloe")
     if BOTLOG:
         await afk_e.client.send_message(BOTLOG_CHATID, "#AFK\nLu AFK!")
+=======
+        await afk_e.edit(f"Going AFK!\
+        \nReason: `{string}`")
+    else:
+        await afk_e.edit("Going AFK!")
+    if BOTLOG:
+        await afk_e.client.send_message(BOTLOG_CHATID, "#AFK\nYou went AFK!")
+    if afk_db:
+        addgvar("AFK_STATUS", True)
+>>>>>>> parent of c3f4312... Update afk.py
     ISAFK = True
     raise StopPropagation
 
@@ -145,8 +182,13 @@ async def type_afk_is_not_true(notafk):
         if BOTLOG:
             await notafk.client.send_message(
                 BOTLOG_CHATID,
+<<<<<<< HEAD
                 "Lu ada " + str(COUNT_MSG) + " Pesan dari " +
                 str(len(USERS)) + " pas lu AFK",
+=======
+                "You've recieved " + str(COUNT_MSG) + " messages from " +
+                str(len(USERS)) + " chats while you were away",
+>>>>>>> parent of c3f4312... Update afk.py
             )
             for i in USERS:
                 name = await notafk.client.get_entity(i)
@@ -154,7 +196,11 @@ async def type_afk_is_not_true(notafk):
                 await notafk.client.send_message(
                     BOTLOG_CHATID,
                     "[" + name0 + "](tg://user?id=" + str(i) + ")" +
+<<<<<<< HEAD
                     " ngirim lu " + "`" + str(USERS[i]) + " pesan`",
+=======
+                    " sent you " + "`" + str(USERS[i]) + " messages`",
+>>>>>>> parent of c3f4312... Update afk.py
                 )
         COUNT_MSG = 0
         USERS = {}
